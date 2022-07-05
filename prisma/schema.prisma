@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id            Int      @id @default(autoincrement()) @unique
+  guildId       String   @unique
+  invitedAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  hasPro        Boolean  @default(false)
+  isBlacklisted Boolean  @default(false)
+}
+
+model GuildModules {
+  guildId           String  @unique
+  moderationEnabled Boolean @default(true)
+  autorolesEnabled  Boolean @default(true)
+  ranksEnabled      Boolean @default(true)
+}
+
+model WebSession {
+  id           String @id @default(cuid()) @unique
+  accessToken  String
+  refreshToken String
+}
+
+model ModLog {
+  id          Int      @id @default(autoincrement()) @unique
+  guildCaseId Int
+  guildId     String
+  userId      String
+  moderatorId String
+  type        String
+  reason      String
+  performedAt DateTime @default(now())
+  hidden      Boolean  @default(false)
+  editedBy    String   @default("null")
+  updatedAt   DateTime @updatedAt
+}
+
+model OnModLog {
+  id             Int     @id @default(autoincrement()) @unique
+  guildId        String  @unique
+  enabled        Boolean @default(false)
+  channelId      String
+  pushOnEdit     Boolean @default(true)
+  includeWarning Boolean @default(false)
+  includeMute    Boolean @default(false)
+  includeKick    Boolean @default(false)
+  includeBan     Boolean @default(false)
+}
+
+model GuildMemberAdd {
+  id              Int                   @id @default(autoincrement()) @unique
+  guildId         String                @unique
+  welcomeMessages WelcomeInGuild?
+  welcomeDMs      WelcomeInDM?
+  roleAssignments MemberAddRoleAssign[]
+  safetyScreening SafetyScreening?
+}
+
+model WelcomeInGuild {
+  id               Int            @id @default(autoincrement()) @unique
+  enabled          Boolean        @default(false)
+  message          String         @db.VarChar(240)
+  channelId        String
+  guildMemberAdd   GuildMemberAdd @relation(fields: [guildMemberAddId], references: [id])
+  guildMemberAddId Int            @unique
+}
+
+model WelcomeInDM {
+  id               Int            @id @default(autoincrement()) @unique
+  enabled          Boolean        @default(false)
+  message          String         @db.VarChar(240)
+  guildMemberAdd   GuildMemberAdd @relation(fields: [guildMemberAddId], references: [id])
+  guildMemberAddId Int            @unique
+}
+
+model MemberAddRoleAssign {
+  id               Int            @id @default(autoincrement()) @unique
+  enabled          Boolean        @default(false)
+  roleId           String
+  delay            Int
+  guildMemberAdd   GuildMemberAdd @relation(fields: [guildMemberAddId], references: [id])
+  guildMemberAddId Int
+}
+
+model SafetyScreening {
+  id               Int            @id @default(autoincrement()) @unique
+  enabled          Boolean        @default(true)
+  guildMemberAdd   GuildMemberAdd @relation(fields: [guildMemberAddId], references: [id])
+  guildMemberAddId Int            @unique
+}
+
+model MessageReactionEvent {
+  id            Int                    @id @default(autoincrement()) @unique
+  guildId       String                 @unique
+  reactionRoles ReactionRoleInstance[]
+}
+
+model ReactionRoleInstance {
+  id                     Int                  @id @default(autoincrement()) @unique
+  enabled                Boolean              @default(false)
+  messageId              String
+  emojiId                String
+  roleId                 String
+  messageReactionEvent   MessageReactionEvent @relation(fields: [messageReactionEventId], references: [id])
+  messageReactionEventId Int
+}
+
+model JoinableRankGuildPreferences {
+  id            Int                    @id @default(autoincrement()) @unique
+  guildId       String                 @unique
+  joinableRanks JoinableRankInstance[]
+}
+
+model JoinableRankInstance {
+  id                             Int                          @id @default(autoincrement()) @unique
+  enabled                        Boolean                      @default(false)
+  name                           String
+  roleId                         String
+  prerequisiteRoleId             String                       @default("null")
+  confirmationMessagesEphemeral  Boolean                      @default(false)
+  joinableRankGuildPreferences   JoinableRankGuildPreferences @relation(fields: [joinableRankGuildPreferencesId], references: [id])
+  joinableRankGuildPreferencesId Int
+}
+
+model GuildBannedPhrases {
+  id            Int            @id @default(autoincrement()) @unique
+  guildId       String
+  bannedPhrases BannedPhrase[]
+}
+
+model BannedPhrase {
+  id                   Int                @id @default(autoincrement()) @unique
+  enabled              Boolean            @default(false)
+  phrase               String
+  action               Action             @default(DELETE)
+  actionContext        String
+  guildBannedPhrases   GuildBannedPhrases @relation(fields: [guildBannedPhrasesId], references: [id])
+  guildBannedPhrasesId Int
+}
+
+model EventLogPreferences {
+  id                      Int     @id @default(autoincrement()) @unique
+  guildId                 String
+  eventLogChannel         String
+  logMessageDeletions     Boolean @default(true)
+  logMessageBulkDeletions Boolean @default(true)
+  logMessageUpdates       Boolean @default(true)
+  logMemberAdd            Boolean @default(false)
+  logMemberRemove         Boolean @default(true)
+  logMemberRoleUpdate     Boolean @default(false)
+  logMemberNicknameUpdate Boolean @default(true)
+}
+
+enum Action {
+  DELETE
+  WARN
+  MUTE
+  BAN
+}
