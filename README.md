@@ -2,6 +2,8 @@
 
 A somewhat-scrappy moderation bot that becomes increasingly redundant with every Discord update.
 
+[Add to your server](https://discord.com/api/oauth2/authorize?client_id=964835704456757308&permissions=1100518599935&scope=bot+applications.commands)
+
 # Usage
 ## Installation
 
@@ -28,3 +30,7 @@ Run `prisma db push` once you have set the correct database URL.
 ## Running Herman
 
 Run `npm run dev` to start Herman
+
+# Future
+
+I plan to open-source the web client I began making for this project at some point.
