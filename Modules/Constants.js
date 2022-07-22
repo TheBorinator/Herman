@@ -80,7 +80,7 @@ module.exports = Object.freeze({
 	RANK_PASSED_MAXIMUM_NUMBER_OF_RANKS: `You cannot make more than 10 joinable ranks at the moment`,
 	
 	RANK_CREATE_SUCCESS: `Created rank \`{{name}}\``,
-	RANK_REMOVE_SUCCESS: `Removed rank \`{{name}}\``,
+	// RANK_REMOVE_SUCCESS: `Removed rank \`{{name}}\``, just removing this for now
 	
 	AUTOROLE_GUILD_HAS_NO_AUTOROLES: `You haven't set up any autoroles yet`,
 	AUTOROLE_DELAY_RANGE_ERROR: `You cannot set an autorole's delay to be less than 0 seconds or greater than 18000 seconds`,
@@ -100,7 +100,7 @@ module.exports = Object.freeze({
 	AUTOROLE_REMOVE_SUCCESS: `Removed autorole {{role}}\nNew members will no longer receive this role`,
 
 	SELF_LACKING_PERMISSIONS: `I need the \`{{permission}}\` permission to perform this action`,
-	USER_LACKING_PERMISSIONS: `You need the \`{{permission}}\` permission to perform this action`,
+	// USER_LACKING_PERMISSIONS: `You need the \`{{permission}}\` permission to perform this action`, just removing this for now
 
 	BANNED_PHRASE: `{{user}}, that is a banned phrase.`,
 
