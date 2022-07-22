@@ -1,5 +1,7 @@
 # Herman
 
+[![CodeFactor](https://www.codefactor.io/repository/github/theborinator/herman/badge)](https://www.codefactor.io/repository/github/theborinator/herman)
+
 A somewhat-scrappy moderation bot that becomes increasingly redundant with every Discord update.
 
 [Add to your server](https://discord.com/api/oauth2/authorize?client_id=964835704456757308&permissions=1100518599935&scope=bot+applications.commands)
